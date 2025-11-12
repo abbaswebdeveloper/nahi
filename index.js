@@ -8,7 +8,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // IMPORTANT: Static files serve karega
+
+// Static files serve karne ke liye
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure multer
 const upload = multer({ 
@@ -42,6 +44,11 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK' });
+});
+
+// Handle all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
